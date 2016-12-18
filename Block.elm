@@ -12,20 +12,21 @@ type alias Block =
     }
 
 
+type alias BlockSize =
+    Float
+
+
 type alias Position =
-    { x : Float, y : Float }
+    { x : Float
+    , y : Float
+    }
 
 
-blockSize : Float
-blockSize =
-    25
-
-
-paint : Color -> Form
-paint color =
+paint : BlockSize -> Color -> Form
+paint size color =
     let
         shape =
-            square blockSize
+            square size
 
         content =
             shape |> filled color
@@ -36,14 +37,14 @@ paint color =
         group [ content, border ]
 
 
-plot : Position -> (Form -> Form)
-plot { x, y } =
-    move ( x * blockSize, y * blockSize )
+plot : BlockSize -> Position -> (Form -> Form)
+plot size { x, y } =
+    move ( x * size, y * size )
 
 
-draw : Block -> Form
-draw { position, color } =
-    paint color |> plot position
+draw : BlockSize -> Block -> Form
+draw size { position, color } =
+    paint size color |> plot size position
 
 
 main : Html a
@@ -61,4 +62,4 @@ main =
         blocks =
             apple :: snake
     in
-        toHtml (collage 500 500 (List.map draw blocks))
+        toHtml (collage 500 500 (List.map (draw 25) blocks))
