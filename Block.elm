@@ -1,4 +1,4 @@
-module Block exposing (main)
+module Block exposing (main, draw, Block, BlockSize)
 
 import Collage exposing (Form, collage, filled, group, move, outlined, solid, square)
 import Color exposing (Color)
