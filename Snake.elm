@@ -4,16 +4,24 @@ import Collage exposing (collage, Form, group)
 import Color exposing (Color)
 import Element exposing (show, toHtml)
 import Html exposing (Html)
-import Block exposing (Block, BlockSize, draw)
+import Block exposing (Position, BlockSize, draw)
+
+
+type alias Scale =
+    Position
 
 
 type alias Snake =
-    List Block
+    List Scale
 
 
 draw : BlockSize -> Snake -> Form
 draw size snake =
-    List.map (Block.draw size) snake |> group
+    let
+        block scale =
+            Block.draw size { position = scale, color = Color.green }
+    in
+        List.map block snake |> group
 
 
 main : Html a
@@ -23,9 +31,9 @@ main =
             25
 
         snake =
-            [ { position = { x = 0, y = 0 }, color = Color.green }
-            , { position = { x = 0, y = 1 }, color = Color.green }
-            , { position = { x = 0, y = 2 }, color = Color.green }
+            [ { x = 0, y = 0 }
+            , { x = 0, y = 1 }
+            , { x = 0, y = 2 }
             ]
     in
         snake
