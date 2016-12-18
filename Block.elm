@@ -1,4 +1,4 @@
-module Block exposing (main, draw, Block, BlockSize, Position)
+module Block exposing (main, draw, Block, BlockSize, Location)
 
 import Collage exposing (Form, collage, filled, group, move, outlined, solid, square)
 import Color exposing (Color)
@@ -7,7 +7,7 @@ import Html exposing (Html)
 
 
 type alias Block =
-    { position : Position
+    { location : Location
     , color : Color
     }
 
@@ -16,7 +16,7 @@ type alias BlockSize =
     Float
 
 
-type alias Position =
+type alias Location =
     { x : Float
     , y : Float
     }
@@ -37,26 +37,26 @@ paint size color =
         group [ content, border ]
 
 
-plot : BlockSize -> Position -> (Form -> Form)
+plot : BlockSize -> Location -> (Form -> Form)
 plot size { x, y } =
     move ( x * size, y * size )
 
 
 draw : BlockSize -> Block -> Form
-draw size { position, color } =
-    paint size color |> plot size position
+draw size { location, color } =
+    paint size color |> plot size location
 
 
 main : Html a
 main =
     let
         apple =
-            { position = { x = 1, y = 4 }, color = Color.red }
+            { location = { x = 1, y = 4 }, color = Color.red }
 
         snake =
-            [ { position = { x = 1, y = 0 }, color = Color.green }
-            , { position = { x = 0, y = 1 }, color = Color.green }
-            , { position = { x = 0, y = 2 }, color = Color.green }
+            [ { location = { x = 1, y = 0 }, color = Color.green }
+            , { location = { x = 0, y = 1 }, color = Color.green }
+            , { location = { x = 0, y = 2 }, color = Color.green }
             ]
 
         blocks =

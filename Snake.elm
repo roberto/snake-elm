@@ -4,11 +4,11 @@ import Collage exposing (collage, Form, group)
 import Color exposing (Color)
 import Element exposing (show, toHtml)
 import Html exposing (Html)
-import Block exposing (Position, BlockSize, draw)
+import Block exposing (Location, BlockSize, draw)
 
 
 type alias Scale =
-    Position
+    Location
 
 
 type alias Snake =
@@ -19,7 +19,7 @@ draw : BlockSize -> Snake -> Form
 draw size snake =
     let
         block scale =
-            Block.draw size { position = scale, color = Color.green }
+            Block.draw size { location = scale, color = Color.green }
     in
         List.map block snake |> group
 
