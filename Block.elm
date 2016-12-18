@@ -17,9 +17,7 @@ type alias BlockSize =
 
 
 type alias Location =
-    { x : Float
-    , y : Float
-    }
+    ( Float, Float )
 
 
 paint : BlockSize -> Color -> Form
@@ -38,7 +36,7 @@ paint size color =
 
 
 plot : BlockSize -> Location -> (Form -> Form)
-plot size { x, y } =
+plot size ( x, y ) =
     move ( x * size, y * size )
 
 
@@ -51,12 +49,12 @@ main : Html a
 main =
     let
         apple =
-            { location = { x = 1, y = 4 }, color = Color.red }
+            { location = ( 1, 4 ), color = Color.red }
 
         snake =
-            [ { location = { x = 1, y = 0 }, color = Color.green }
-            , { location = { x = 0, y = 1 }, color = Color.green }
-            , { location = { x = 0, y = 2 }, color = Color.green }
+            [ { location = ( 1, 0 ), color = Color.green }
+            , { location = ( 0, 1 ), color = Color.green }
+            , { location = ( 0, 2 ), color = Color.green }
             ]
 
         blocks =
