@@ -6,9 +6,10 @@ import Element exposing (show, toHtml)
 import Html exposing (Html)
 
 
-type Block a
-    = Apple Position
-    | Scale Position
+type alias Block =
+    { position : Position
+    , color : Color
+    }
 
 
 type alias Position =
@@ -36,28 +37,28 @@ paint color =
 
 
 plot : Position -> (Form -> Form)
-plot position =
-    move ( position.x * blockSize, position.y * blockSize )
+plot { x, y } =
+    move ( x * blockSize, y * blockSize )
 
 
-draw : Block a -> Form
-draw block =
-    case block of
-        Apple position ->
-            paint Color.red |> plot position
-
-        Scale position ->
-            paint Color.green |> plot position
+draw : Block -> Form
+draw { position, color } =
+    paint color |> plot position
 
 
 main : Html a
 main =
     let
-        items =
-            [ Apple { x = 1, y = 4 }
-            , Scale { x = 0, y = 0 }
-            , Scale { x = 0, y = 1 }
-            , Scale { x = 0, y = 2 }
+        apple =
+            { position = { x = 1, y = 4 }, color = Color.red }
+
+        snake =
+            [ { position = { x = 1, y = 0 }, color = Color.green }
+            , { position = { x = 0, y = 1 }, color = Color.green }
+            , { position = { x = 0, y = 2 }, color = Color.green }
             ]
+
+        blocks =
+            apple :: snake
     in
-        toHtml (collage 500 500 (List.map draw items))
+        toHtml (collage 500 500 (List.map draw blocks))
