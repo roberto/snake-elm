@@ -1,9 +1,7 @@
-module Snake exposing (main)
+module Snake exposing (Snake, draw)
 
 import Collage exposing (collage, Form, group)
 import Color exposing (Color)
-import Element exposing (show, toHtml)
-import Html exposing (Html)
 import Block exposing (Location, BlockSize, draw)
 
 
@@ -22,22 +20,3 @@ draw size snake =
             Block.draw size { location = scale, color = Color.green }
     in
         List.map block snake |> group
-
-
-main : Html a
-main =
-    let
-        blockSize =
-            25
-
-        snake =
-            [ ( 0, 0 )
-            , ( 0, 1 )
-            , ( 0, 2 )
-            ]
-    in
-        snake
-            |> draw blockSize
-            |> flip (::) []
-            |> collage 500 500
-            |> toHtml
