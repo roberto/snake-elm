@@ -38,7 +38,7 @@ type Direction
 
 init : Model
 init =
-    { snake = [ ( 1, 1 ), ( 1, 2 ) ]
+    { snake = [ ( 1, 1 ), ( 1, 2 ), ( 1, 3 ) ]
     , apple = ( 0, -1 )
     , lastUpdate = 0
     , direction = Up
@@ -80,6 +80,17 @@ update msg model =
 step : Model -> Model
 step model =
     let
+        removeLast snake =
+            List.take (List.length snake - 1) snake
+
+        addFirst snake =
+            case List.head snake of
+                Just scale ->
+                    (move scale) :: snake
+
+                Nothing ->
+                    snake
+
         move =
             case model.direction of
                 Up ->
@@ -94,10 +105,12 @@ step model =
                 Right ->
                     \( x, y ) -> ( x + 1, y )
 
-        snake =
-            List.map move model.snake
+        newSnake =
+            model.snake
+                |> removeLast
+                |> addFirst
     in
-        { model | snake = snake }
+        { model | snake = newSnake }
 
 
 view : Model -> Html a
