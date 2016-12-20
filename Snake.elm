@@ -3,7 +3,7 @@ module Snake exposing (Snake, Model, Msg, view, update, init, step, subscription
 import Collage exposing (collage, Form, group)
 import Color exposing (Color)
 import Block exposing (Location, BlockSize, draw)
-import Keyboard
+import Keyboard exposing (KeyCode, ups)
 
 
 type alias Model =
@@ -37,6 +37,7 @@ type Direction
     | Down
     | Right
     | Left
+    | Nowhere
 
 
 type Msg
@@ -47,21 +48,53 @@ update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
         KeyDown key ->
-            case key of
-                37 ->
-                    { model | direction = Left } ! []
+            let
+                direction =
+                    toDirection key
+            in
+                case direction of
+                    Nowhere ->
+                        model ! []
 
-                38 ->
-                    { model | direction = Up } ! []
+                    _ ->
+                        { model | direction = handleDirection model.direction direction } ! []
 
-                39 ->
-                    { model | direction = Right } ! []
 
-                40 ->
-                    { model | direction = Down } ! []
+toDirection : KeyCode -> Direction
+toDirection key =
+    case key of
+        37 ->
+            Left
 
-                _ ->
-                    model ! []
+        38 ->
+            Up
+
+        39 ->
+            Right
+
+        40 ->
+            Down
+
+        _ ->
+            Nowhere
+
+
+handleDirection : Direction -> Direction -> Direction
+handleDirection current candidate =
+    if opposite current candidate then
+        current
+    else
+        candidate
+
+
+oppositors : List (List Direction)
+oppositors =
+    [ [ Left, Right ], [ Right, Left ], [ Up, Down ], [ Down, Up ] ]
+
+
+opposite : Direction -> Direction -> Bool
+opposite a b =
+    List.member [ a, b ] oppositors
 
 
 step : Model -> Model
@@ -91,6 +124,9 @@ step model =
 
                 Right ->
                     \( x, y ) -> ( x + 1, y )
+
+                Nowhere ->
+                    \( x, y ) -> ( x, y )
 
         newSnake =
             model.snake
