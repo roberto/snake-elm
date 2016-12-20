@@ -4,6 +4,7 @@ import Collage exposing (collage, Form, group)
 import Color exposing (Color)
 import Block exposing (Location, BlockSize, draw)
 import Keyboard exposing (KeyCode, ups)
+import Dict exposing (Dict)
 
 
 type alias Model =
@@ -47,36 +48,33 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
-        KeyDown key ->
+        KeyDown keyCode ->
             let
-                direction =
-                    toDirection key
+                newDirection =
+                    toDirection keyCode
             in
-                case direction of
+                case newDirection of
                     Nowhere ->
                         model ! []
 
                     _ ->
-                        { model | direction = handleDirection model.direction direction } ! []
+                        { model | direction = handleDirection model.direction newDirection } ! []
 
 
 toDirection : KeyCode -> Direction
-toDirection key =
-    case key of
-        37 ->
-            Left
-
-        38 ->
-            Up
-
-        39 ->
-            Right
-
-        40 ->
-            Down
-
-        _ ->
+toDirection keyCode =
+    case Dict.get keyCode keyCodeToDirection of
+        Nothing ->
             Nowhere
+
+        Just direction ->
+            direction
+
+
+keyCodeToDirection : Dict KeyCode Direction
+keyCodeToDirection =
+    Dict.fromList
+        [ ( 37, Left ), ( 38, Up ), ( 39, Right ), ( 40, Down ) ]
 
 
 handleDirection : Direction -> Direction -> Direction
