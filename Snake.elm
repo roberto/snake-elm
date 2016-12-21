@@ -49,16 +49,19 @@ update : Msg -> Model -> ( Model, Cmd a )
 update msg model =
     case msg of
         KeyDown keyCode ->
-            let
-                newDirection =
-                    toDirection keyCode
-            in
-                case newDirection of
-                    Nowhere ->
-                        model ! []
+            handleDirection model keyCode ! []
 
-                    _ ->
-                        { model | direction = handleDirection model.direction newDirection } ! []
+
+handleDirection : Model -> KeyCode -> Model
+handleDirection model keyCode =
+    let
+        candidate =
+            toDirection keyCode
+    in
+        if opposite model.direction candidate then
+            model
+        else
+            { model | direction = candidate }
 
 
 toDirection : KeyCode -> Direction
@@ -77,22 +80,14 @@ keyCodeToDirection =
         [ ( 37, Left ), ( 38, Up ), ( 39, Right ), ( 40, Down ) ]
 
 
-handleDirection : Direction -> Direction -> Direction
-handleDirection current candidate =
-    if opposite current candidate then
-        current
-    else
-        candidate
+opposite : Direction -> Direction -> Bool
+opposite a b =
+    List.member [ a, b ] oppositors
 
 
 oppositors : List (List Direction)
 oppositors =
     [ [ Left, Right ], [ Right, Left ], [ Up, Down ], [ Down, Up ] ]
-
-
-opposite : Direction -> Direction -> Bool
-opposite a b =
-    List.member [ a, b ] oppositors
 
 
 step : Model -> Model
@@ -124,7 +119,7 @@ step model =
                     \( x, y ) -> ( x + 1, y )
 
                 Nowhere ->
-                    \( x, y ) -> ( x, y )
+                    identity
 
         newSnake =
             model.snake
